@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">FieldTrack</string>
+    <string name="home_title">FieldTrack</string>
+    <string name="home_subtitle">Project scaffold — feature work starts next sprint.</string>
+</resources>
