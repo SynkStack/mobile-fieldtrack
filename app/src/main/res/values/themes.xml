@@ -1,0 +1,5 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. Compose owns most styling; this covers the
+         system window/launch theme surface. -->
+    <style name="Theme.FieldTrack" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>
