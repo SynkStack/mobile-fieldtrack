@@ -18,14 +18,37 @@ This is the initial project scaffold. It is intentionally minimal:
     `Theme.kt`) with light/dark and dynamic-color support.
 - **Resources:** standard `res/values` (`strings.xml`, `colors.xml`,
   `themes.xml`) plus an adaptive launcher icon.
-- **Tests:** one placeholder local unit test (`src/test`) and one placeholder
-  instrumented test (`src/androidTest`), wired to the standard JUnit /
-  AndroidX Test / Espresso setup, to confirm both test source sets build.
+- **Tests:** placeholder local unit test (`src/test`) and instrumented test
+  (`src/androidTest`), wired to the standard JUnit / AndroidX Test /
+  Espresso setup, plus the location module's own unit tests (see below).
 
-No feature logic exists yet — no auth, backend integration, persistence,
-maps, analytics, notifications, live location tracking, or sync/upload/retry
-logic. Those are deliberately out of scope for this setup task and will be
-layered on in subsequent sprints.
+### Location/data module
+`com.synkstack.fieldtrack.location` (under `app/src/main/java/.../location/`)
+holds the initial foundation for capturing and eventually syncing location
+samples:
+
+- `location/model/LocationPoint.kt` — plain data class for a single captured
+  sample (id, lat/lng, accuracy, capture time, sync status). Validates that
+  latitude/longitude fall in range.
+- `location/model/SyncStatus.kt` — `PENDING` / `SYNCED` marker for a point,
+  so points captured offline can later be picked up by a sync process.
+- `location/data/LocationRepository.kt` — interface for recording and
+  reading back points (`record`, `getAll`, `getPending`, `markSynced`,
+  `observeAll`). Deliberately storage-agnostic so a persistent (e.g.
+  Room-backed) implementation can replace the in-memory one later without
+  changing callers.
+- `location/data/InMemoryLocationRepository.kt` — the only implementation
+  for now: holds points in a `MutableStateFlow` for the lifetime of the
+  process, guarded by a `Mutex`. Nothing is persisted or transmitted.
+
+This module has no GPS/FusedLocationProvider integration, no Google Maps, no
+backend calls, no database, and no real sync logic yet — it only establishes
+the data shape and access pattern that future location-capture UI and a
+delayed-sync worker will build on.
+
+No other feature logic exists yet either — no auth, database, maps,
+analytics, notifications, or upload/retry logic. Those remain out of scope
+and will be layered on in subsequent sprints.
 
 ## Setup
 Requirements: JDK 17, Android SDK (compileSdk 34), and network access to
